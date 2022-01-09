@@ -147,7 +147,7 @@ client.connect().then(() => {
     }
 
     async function replaceTweets(tweets) {
-        await tweetsDb.drop()
+        if (await tweetsDb.count() > 0) await tweetsDb.drop()
         const res = await tweetsDb.insertMany(tweets, { ordered: true })
         console.log(`${res.insertedCount} tweets were inserted`);
     }
