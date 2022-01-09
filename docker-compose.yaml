@@ -1,0 +1,20 @@
+version: "3"
+services:
+  node-app:
+    restart: always
+    build: ./node/
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./backup:/usr/src/app/backup
+    ports:
+      - "7500:8080"
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - '27017:27017'

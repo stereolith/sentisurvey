@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sentisurvey</title>
+    <link rel="stylesheet" href="tailwind.css">
+  </head>
+  <body class="bg-gray-100">
+    <div class="border max-w-xl rounded-md bg-gray-50 p-3 md:p-5 m-auto mt-12">
+      <div id="surveywrapper" class="hidden">
+        <form method="post" action="/" class="group">
+          <input style="display: none;" name="tweetId" id="tweetId" value=""/>
+          <input style="display: none;" name="userId" id="userId" value=""/>
+
+          <h1 class="text-xl font-semibold underline mt-1 text-gray-900">Bitte lies folgenden Tweet:</h1>
+          <div id="tweetText" class="pl-3 py-1 border-l-4 border-pink-300 mb-2 mt-2 text-gray-800"></div>
+
+          <h1 class="text-md font-semibold mt-4 text-gray-900">Wie würdest du die Sprache im oben stehenden Tweet bewerten?</h1>
+          <div class="flex mt-4 pb-5 opacity-50 pointer-events-none buttons-wrapper">
+            <label class="flex-1">
+              <input type="radio" name="sentiment" id="negative" class="absolute -z-10 opacity-0 peer" value="negative" required>
+              <div class="flex mr-4 p-2 cursor-pointer items-center justify-center rounded-md text-black hover:bg-red-200 active: border border-2 border-red-200  peer-checked:bg-red-200">Negativ</div>
+            </label>
+            <label class="flex-1">
+              <input type="radio" name="sentiment" id="neutral" class="absolute -z-10 opacity-0 peer"  value="neutral">
+              <div class="flex items-center p-2 cursor-pointer  justify-center rounded-md text-black border border-2 hover:bg-gray-200 peer-checked:bg-gray-300">Neutral</div>
+            </label>
+            <label class="flex-1">
+              <input type="radio" name="sentiment" id="positive" class="absolute -z-10 opacity-0 peer" value="positive">
+              <div class="flex ml-4 p-2 cursor-pointer items-center justify-center rounded-md text-black hover:bg-green-400 active: border border-2 border-green-400  peer-checked:bg-green-400">Positiv</div>
+            </label>
+          </div>
+
+          <h1 class="text-md font-semibold mt-4 text-gray-900">Nach dem Text dieses Tweets, wie steht die/der AutorIn zum Thema "Immunitätsausweis"?</h1>
+          <div class="flex mt-4 pb-5 opacity-50 pointer-events-none buttons-wrapper">
+            <label class="flex-1">
+              <input type="radio" name="stance" id="disagree" class="absolute -z-10 opacity-0 peer" value="disagree" required>
+              <div class="flex mr-4 p-2 cursor-pointer items-center justify-center rounded-md text-black hover:bg-red-200 active: border border-2 border-red-200  peer-checked:bg-red-200">Ablehnung</div>
+            </label>
+            <label class="flex-1">
+              <input type="radio" name="stance" id="neutral" class="absolute -z-10 opacity-0  peer"  value="neutral">
+              <div class="flex items-center p-2 cursor-pointer  justify-center rounded-md text-black border border-2 hover:bg-gray-200 peer-checked:bg-gray-300">Neutral</div>
+            </label>
+            <label class="flex-1">
+              <input type="radio" name="stance" id="agree" class="absolute -z-10 opacity-0 peer" value="agree">
+              <div class="flex ml-4 p-2 cursor-pointer items-center justify-center rounded-md text-black hover:bg-green-400 active: border border-2 border-green-400  peer-checked:bg-green-400">Zustimmung</div>
+            </label>
+          </div>
+
+          <button type="submit" class="float-right py-2 px-3 bg-pink-400 group-invalid:opacity-40 group-invalid:cursor-not-allowed text-white font-bold rounded invalid:text-gray-400 ">Weiter</button>
+          <div class="clear-right"></div>
+        </form>
+        <div id="progressWrapper" class="mt-4">
+          <div class="">Bitte schätze mindestens 10 Tweets ein.</div>
+          <div class="flex w-100 h-2 bg-gray-300 rounded-md my-1 overflow-hidden">
+            <div
+              id="progress"
+              style="width: 0%"
+              class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-500"
+            ></div>
+          </div>
+          <div class="text-sm text-right">Fortschritt: <span id="current">0</span> / <span id="target"></span></div>
+        </div>
+      </div>
+      <div id="done" class="hidden">
+        <h1 class="text-xl font-semibold pb-2 underline text-gray-900">Vielen Dank!</h1>
+        Hier gibt es nichts mehr zu tun.
+      </div>
+    </div>
+    <script>
+      // progress bar
+      const target = 10
+      document.getElementById("target").innerHTML = target
+      function updateProgress(current) {
+        const percentage = Math.min(Math.round(current / target * 100), 100)
+        document.getElementById("progress").style.width = percentage + "%"
+        document.getElementById("current").innerHTML = Math.min(target, current)
+      }
+
+      const buttons = document.querySelectorAll('.buttons-wrapper')
+
+      // create user ID
+      function uuidv4() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        });
+      }
+      let userId = localStorage.getItem('userId')
+      if (!userId) {
+        userId = uuidv4()
+        localStorage.setItem("userId", userId)
+      }
+      document.getElementById("userId").value = userId
+
+      fetch('/tweet?userId=' + encodeURIComponent(userId)).then(response => response.json()).then(tweet => {
+        console.log(tweet)
+        document.getElementById("tweetId").value = tweet.id
+        document.getElementById("tweetText").innerHTML = tweet.text
+        document.getElementById("surveywrapper").classList.remove('hidden')          
+        setTimeout(() => {
+          buttons.forEach(b => {
+            b.classList.remove('opacity-50')
+            b.classList.remove('pointer-events-none')
+          })
+        }, 1500)
+        updateProgress(tweet.count)
+      }).catch(() => {
+        document.getElementById("done").classList.remove('hidden')
+        document.getElementById("progressWrapper").classList.add('hidden')
+      })
+
+      // button selection
+
+
+    </script>
+  </body>
+</html>

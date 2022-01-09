@@ -1,0 +1,13 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "public/index.html",
+  "scripts": {
+    "tailwind": "npx tailwindcss -i ./src/style.css -o ./public/tailwind.css --watch"
+  },
+  "author": "",
+  "devDependencies": {
+    "tailwindcss": "^3.0.11"
+  }
+}

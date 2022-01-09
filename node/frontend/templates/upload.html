@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sentisurvey</title>
+    <link rel="stylesheet" href="tailwind.css">
+  </head>
+  <body class="bg-gray-100">
+    <div class="max-w-xl bg-gray-50 rounded-md bg-gray-50 p-3 md:p-5 m-auto mt-12">
+      <h1 class="text-xl font-semibold pb-2 underline text-gray-900">Upload</h1>
+      <a class="float-right ml-3 mt-1 items-center p-2 justify-center rounded-md text-black border my-2" target="_blank" href="/result">Download current results</a></td>
+      <form action="" method="post" encType="multipart/form-data">
+        <table class="my-2">
+          <tr>
+            <td class="text-indigo-800 py-1 text-right whitespace-nowrap">Upload tweets JSON:</td>
+            <td class="pl-3"><input type="file" name="tweetsJSON" id="tweetsJSON" accept=".json"></td>
+          </tr>
+          <tr>
+            <td class="text-indigo-800 py-1 text-right whitespace-nowrap">Users per tweet needed:</td>
+            <td class="pl-3"><input type="number" name="userNumber" id="userNumber" value="5"></td>
+          </tr>
+          <tr>
+            <td colspan="2" class="pt-5 text-gray-800 leading-5 w-100">
+              <div>The results of the current dataset will be downloaded after submit.<br> The new dataset will overwrite the current db.</div>
+              <button class="float-right ml-3 mt-1 items-center p-2 justify-center rounded-md text-black border bg-green-200 hover:bg-green-300" type="submit">Submit</button></td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </body>
+</html>
