@@ -82,6 +82,7 @@ client.connect().then(() => {
     const uploadAdminUrl = process.env.NODE_ENV === 'development' ? '/upload' : `/upload-${uuid4()}`
     console.log('the admin upload UI URL is', uploadAdminUrl)
     app.get(uploadAdminUrl, (req, res) => {
+        backupTweets()
         res.sendFile(path.join(__dirname, './frontend/templates', 'upload.html'))
     })
     app.post(uploadAdminUrl, async (req, res) => {
