@@ -135,7 +135,7 @@ client.connect().then(() => {
         return {
             count: await tweetsDb.count(),
             codedCount: await tweetsDb.count({"sentimentResults.0": { $exists: true }}),
-            fullyCodedCount: await tweetsDb.count({"sentimentResults.9": { $exists: true }})
+            fullyCodedCount: await tweetsDb.count({"sentimentResults.2": { $exists: true }})
         }
     }
 
