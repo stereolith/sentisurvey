@@ -115,7 +115,7 @@ client.connect().then(() => {
     async function getNextTweet(coderId) {
         const res = await tweetsDb.aggregate([
             { $match: {
-                "sentimentResults.9": { $exists: false },
+                "sentimentResults.2": { $exists: false },
                 'sentimentResults.coderId': { $ne: coderId }
             }},
             { $sample: { size: 1 } }
